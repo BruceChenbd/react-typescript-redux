@@ -1,0 +1,11 @@
+export const SET_COLLAPSED = 'SET_COLLAPSED'
+export type SET_COLLAPSED = typeof SET_COLLAPSED
+
+export const SET_SELECTED_KEYS = 'SET_SELECTED_KEYS'
+export type SET_SELECTED_KEYS = typeof SET_SELECTED_KEYS
+
+export const UPDATE_USER_INFO = 'UPDATE_USER_INFO'
+export type UPDATE_USER_INFO = typeof UPDATE_USER_INFO
+
+export const LOGIN_OUT = 'LOGIN_OUT'
+export type LOGIN_OUT = typeof LOGIN_OUT

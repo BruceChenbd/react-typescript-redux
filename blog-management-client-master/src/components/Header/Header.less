@@ -1,0 +1,59 @@
+.page-container__header {
+  background: #fff;
+  padding: 0 24px 0 0;
+  height: 50px;
+  line-height: 50px;
+
+  &.fixed-top {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: calc(100% - 200px);
+    z-index: 9;
+    transition: width 0.2s;
+  }
+
+  .trigger {
+    display: inline-block;
+    height: 50px;
+    width: 50px;
+    padding-top: 16px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.5s;
+    vertical-align: top;
+    background: #fff;
+  }
+
+  .trigger:hover {
+    color: #1890ff;
+    background: #e6f7ff;
+  }
+
+  .dropdown-link {
+    float: right;
+    max-width: 200px;
+    line-height: 50px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .ant-avatar {
+    margin: 9px 0 0 8px;
+    vertical-align: top;
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    margin-left: 8px;
+    vertical-align: -10px;
+    border-radius: 50%;
+  }
+
+  .username {
+    color: rgba(0, 0, 0, 0.65);
+  }
+}

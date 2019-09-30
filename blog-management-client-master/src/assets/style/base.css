@@ -1,0 +1,124 @@
+/* reset
+--------------------------------------------------------------------*/
+html * {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+p {
+  margin: 0;
+}
+
+/* 滚动条整体样式 */
+.scrollbar-container::-webkit-scrollbar {
+width: 6px;
+height: 6px;
+}
+
+/* 滚动条轨道样式 */
+.scrollbar-container::-webkit-scrollbar-track {
+background-color: #fff;
+}
+
+/* 滚动条滑块的样式 */
+.scrollbar-container::-webkit-scrollbar-thumb {
+background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* 滚动条上下按钮的样式 */
+.scrollbar-container::-webkit-scrollbar-button {
+background-color: #888;
+display: none;
+}
+
+/* 两个滚动条交叉处的样式 */
+.scrollbar-container::-webkit-scrollbar-corner {
+background-color: black;
+}
+
+/* reset antd
+--------------------------------------------------------------------*/
+.ant-card .ant-card-body {
+  padding: 24px!important;
+}
+.ant-table-thead>tr>th {
+  background: #fafafa!important;
+}
+.ant-table-small .ant-table-body {
+  margin: 0!important;
+}
+.ant-pagination {
+  margin-bottom: 0!important;
+}
+
+/* reset simplemde-markdown-editor
+--------------------------------------------------------------------*/
+.editor-toolbar button {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none!important;
+  color: #2c3e50!important;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  background: transparent;
+}
+.editor-toolbar button.active, .editor-toolbar button:hover {
+  background: #fcfcfc;
+  border-color: #95a5a6;
+}
+.CodeMirror {
+  height: 200px!important;
+}
+.CodeMirror-scroll {
+  padding-bottom: 10px!important;
+}
+.CodeMirror-fullscreen {
+  height: auto!important;
+}
+.editor-preview.editor-preview-active pre,
+.editor-preview-side.editor-preview-active-side pre {
+  display: block;
+  padding: 10px;
+  margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.editor-preview.editor-preview-active blockquote,
+.editor-preview-side.editor-preview-active-side blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 17.5px;
+  border-left: 5px solid #eee;
+}
+.editor-preview.editor-preview-active img,
+.editor-preview-side.editor-preview-active-side img {
+  max-width: 400px;
+  border-radius: 4px;
+  margin: 0 0 10px;
+}
+.editor-preview.editor-preview-active p,
+.editor-preview-side.editor-preview-active-side p {
+  margin-bottom: 10px;
+}
+
+/* common
+--------------------------------------------------------------------*/
+.mb-0 {
+  margin-bottom: 0!important;
+}
+.p-24 {
+  padding: 24px!important;
+}
