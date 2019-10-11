@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Card, Form, Row, Col, Input, Button, Table, Divider, message, Modal } from 'antd';
+import { Card, Form, Row, Col, Input, Button, Table, Divider, message, Modal, Upload } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import './Category.less';
 import { CategoryM } from '../../components/CategoryModel/CategoryModel';
 import * as api from '../../api/fetchdata';
 import { checkUserToken } from '../../utils/utils';
+import * as XLSX from 'xlsx';
 
 const FormItem = Form.Item;
 const confirm = Modal.confirm;
@@ -23,6 +24,9 @@ interface IState {
   mode: string;
   total: number;
   pageNum: number;
+  data: any [];
+  fileList: any [];
+  columns: object
 }
 
 class CategoryList extends React.Component<any, IState> {
@@ -41,7 +45,10 @@ class CategoryList extends React.Component<any, IState> {
     categoryList: [],
     mode: '',
     total: 1,
-    pageNum:1
+    pageNum:1,
+    data:[],
+    fileList: [],
+    columns: [{title:"分类名称",dataIndex:"categoryName"},{title:"创建时间",dataIndex:"createTime"},{title:"更新时间",dataIndex:"updateTime"},{title:"文章数", dataIndex:"article_count"}],
   };
 
   public columns: ColumnProps<any>[] = [
@@ -76,7 +83,8 @@ class CategoryList extends React.Component<any, IState> {
       }
     }
   ];
-
+  
+  
   public componentWillMount() {
     this.getCategoryList();
   }
@@ -293,9 +301,143 @@ class CategoryList extends React.Component<any, IState> {
       .catch(err => console.log(err));
     }
   };
+  
 
+  // 导入excl
+  handleImpotedJson = (array: any, file:any) => {
+       
+    const header = array[0];
+    const entozh = this.formatTitleOrFileld('title', 'dataIndex');
+    const firstRow = header.map((item:any) => entozh[item]);
+
+    const newArray = [...array];
+
+    newArray.splice(0, 1);
+
+    const json = newArray.map((item, index) => {
+        const newitem = {};
+        item.forEach((im:any, i:number) => {
+            const newKey = firstRow[i] || i;
+            newitem[newKey] = im
+        })
+        return newitem;
+    });
+    console.log(json,'json')
+    const formatData = json.map((item:any) => ({
+        categoryName: item.categoryName,
+        createTime: item.createTime,
+        updateTime: item.updateTime,
+        article_count: item.article_count
+    }))
+
+    this.setState({ data: formatData, fileList: [file] });
+
+    return formatData;
+  }
+// 格式化表格标题
+formatTitleOrFileld = (a:any, b:any) => {
+    const entozh = {};
+    this.state.columns.forEach(item => {
+        entozh[item[a]] = item[b]
+    })
+    return entozh;
+}
+// 生成excl
+sheet2blob = (sheet:any, sheetName:any) => {
+  sheetName = sheetName || 'sheet1';
+  var workbook = {
+    SheetNames: [sheetName],
+    Sheets: {}
+  };
+  workbook.Sheets[sheetName] = sheet; // 生成excel的配置项
+
+  var wopts:any = {
+    bookType: 'xlsx', // 要生成的文件类型
+    bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+    type: 'binary'
+  };
+  var wbout = XLSX.write(workbook, wopts);
+  var blob = new Blob([s2ab(wbout)], {
+    type: "application/octet-stream"
+  }); // 字符串转ArrayBuffer
+  function s2ab(s:any) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+  }
+
+  return blob;
+}
+// 打开下载框
+openDownloadDialog = (url:any, saveName:any) => {
+  if (typeof url == 'object' && url instanceof Blob) {
+    url = URL.createObjectURL(url); // 创建blob地址
+  }
+  var aLink = document.createElement('a');
+  aLink.href = url;
+  aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+  var event;
+  if (window) event = new MouseEvent('click');
+  else {
+    event = document.createEvent('MouseEvents');
+    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+  }
+  aLink.dispatchEvent(event);
+}
+
+// 导出
+handleExportAll = (e:any) => {
+  const entozh = {
+    "categoryName":"分类名称",
+    "createTime":"创建时间",
+    "updateTime":"更新时间",
+    "article_count":"文章数"
+  }
+
+  const nowdata = this.state.categoryList;
+
+  const json = nowdata.map((item) => {
+    return Object.keys(item).reduce((newData, key) => {
+      const newKey = entozh[key] || key
+      newData[newKey] = item[key]
+      return newData
+    }, {})
+  });
+
+
+  const sheet = XLSX.utils.json_to_sheet(json);
+
+  this.openDownloadDialog(this.sheet2blob(sheet,undefined), `分类列表.xlsx`);
+
+}
+// 导出标准格式文件
+handleExportDocument = (e:any) => {
+  const entozh = {
+    "categoryName":"分类名称",
+    "createTime":"创建时间",
+    "updateTime":"更新时间",
+    "article_count":"文章数"
+  }
+
+  let nowdata = this.state.categoryList
+
+  const json = nowdata.map((item) => {
+    return Object.keys(item).reduce((newData, key) => {
+      const newKey = entozh[key] || key
+      newData[newKey] = item[key]
+      return newData
+    }, {})
+  });
+
+
+  const sheet = XLSX.utils.json_to_sheet(json);
+
+  this.openDownloadDialog(this.sheet2blob(sheet,undefined), `标准格式文件.xlsx`);
+
+}
   public render() {
-    const { queryOpt, mode,total } = this.state;
+    const { queryOpt, mode,total ,columns,data,fileList} = this.state;
     // 分页配置
     const paginationProps = {
       showTotal: () => `共${total}条`,
@@ -304,6 +446,38 @@ class CategoryList extends React.Component<any, IState> {
       defaultPageSize:1,
       onShowSizeChange: (current:number,pageSize:number) => this.changePageSize(pageSize,current),
       onChange: (current:number,pageSize:number) => this.changePage(current,pageSize),
+    };
+
+    const uploadProps={
+        onRemove: (file:any) => {
+            this.setState(state => ({
+                data:[],
+                fileList:[]
+            }));
+        },
+        accept: ".xls,.xlsx,application/vnd.ms-excel",
+        beforeUpload: (file:any) => {
+            const _this=this;
+            const f = file;
+            const reader = new FileReader();
+            reader.onload = function (e:any) {
+
+                const datas = e.target.result;
+
+                const workbook = XLSX.read(datas, {
+                    type: 'binary'
+                });//尝试解析datas
+
+                const first_worksheet = workbook.Sheets[workbook.SheetNames[0]];//是工作簿中的工作表的有序列表
+
+                const jsonArr = XLSX.utils.sheet_to_json(first_worksheet, { header: 1 });//将工作簿对象转换为JSON对象数组
+
+                _this.handleImpotedJson(jsonArr, file);
+            };
+            reader.readAsBinaryString(f);
+            return false;
+        },
+        fileList,
     };
     return (
       <div className="category-list-component">
@@ -326,6 +500,22 @@ class CategoryList extends React.Component<any, IState> {
                   </Button>
                 </FormItem>
               </Col>
+              <Col span={4}>
+                <FormItem className="mb-0">
+                  <Button type="primary" onClick={this.handleExportDocument}>
+                    excl导出
+                  </Button>
+                </FormItem>
+              </Col>
+              <Col span={4}>
+                <FormItem className="mb-0">
+                <Upload {...uploadProps}>
+                  <Button type="primary">
+                    excl导入
+                  </Button>
+                </Upload>
+                </FormItem>
+              </Col>
             </Row>
           </Form>
         </Card>
@@ -344,7 +534,11 @@ class CategoryList extends React.Component<any, IState> {
             expandedRowRender={(record: any) => <p style={{ margin: 0 }}>分类说明：{record.desc || '暂无分类'}</p>}
           />
         </Card>
-
+        {
+          data.length?<Table size="small" columns={columns} dataSource={data}
+          expandedRowRender={(record: any) => <p style={{ margin: 0 }}>分类说明：{record.desc || '暂无分类'}</p>}
+          ></Table>:null
+        }
         <CategoryM
           className="category-model"
           mode={mode}
