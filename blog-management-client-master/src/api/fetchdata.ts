@@ -41,6 +41,9 @@ export const getTagList = (opt: any) => ajax({ method: 'GET', url: '/manage/getT
 // delete tag
 export const deleteTag = (id: string) => ajax({ method: 'DELETE', url: `/manage/delTag/${id}` });
 
+// get rand number
+export const getRandNum = () => ajax({ method: 'get', url:'/manage/getRandNum'});
+
 // update tag
 export const updateTag = (opt: any) => ajax({ method: 'PUT', url: '/manage/updateTag', data: opt });
 

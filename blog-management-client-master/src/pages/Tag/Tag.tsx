@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import * as api from '../../api/fetchdata';
-import { Card, Form, Row, Col, Input, Button, Table, Divider, message, Modal } from 'antd';
+import { Card, Form, Row, Col, Input, Button, Table, Divider, message, Modal, Tag } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import './Tag.less';
 import {CategoryCreateM} from '../../components/TagModel/TagModel';
@@ -19,6 +19,8 @@ interface IState {
   mode: string;
   total: number;
   pageNum: number;
+  num: number,
+  n:number
 }
 
 class TagList extends React.Component<any, IState> {
@@ -34,7 +36,9 @@ class TagList extends React.Component<any, IState> {
     tagList: [],
     mode: '',
     total: 0,
-    pageNum: 0
+    pageNum: 0,
+    num: 0,
+    n:0
   };
 
   public columns: ColumnProps<any>[] = [
@@ -78,10 +82,68 @@ class TagList extends React.Component<any, IState> {
 
   public componentDidMount() {
     this.getTagList();
+    this.initNum()
   }
 
   public componentWillUnmount() {
     this.unMount = true;
+  }
+  
+  public initNum = () => {
+    // 定义原始数据
+    let originData:any = [],showData:any;
+    // 初始化调用数据
+    api.getRandNum().then(res => {
+      let { message } = res.data;
+      originData.push(message);
+      this.renderNum(originData)
+    });
+    
+    // 每秒刷新num
+    setInterval(() => {
+      this.renderNum(showData? showData: originData)
+    },1000)
+    
+    // 5秒调用一次接口
+    setInterval(() => {
+      api.getRandNum().then(res => {
+        let { message } = res.data;
+        originData.push(message);
+        // 大于两个 删除前一个
+        if(originData.length > 2) {
+          originData.shift()
+        };
+        // 深度拷贝 作为要展示的数据
+        showData = JSON.parse(JSON.stringify(originData));
+        // console.log(showData,'showData1')
+        let oldNum = showData[0].num;
+        let newNum = showData[1].num;
+
+        // 5秒前和5秒后 无变化
+        if(oldNum === newNum) {
+          showData['changenum'] = 0;
+        } else {
+          // 若有变化，则找出5秒内 每秒变化幅度
+          showData['changenum'] = Math.round((newNum - oldNum)/5);
+        }
+
+      })
+    },5000)
+  }
+  // 页面渲染num
+  public renderNum = (message:any) => {
+       //  每秒变化幅度
+       let changeNum = message['changenum']? message['changenum']*this.state.n:0
+       this.setState({
+         num: message[0].num + changeNum,
+         n: this.state.n+1
+       })
+       //  n变量表示每秒的秒数
+       if(this.state.n >5) {
+         this.setState({
+           n: 1
+         })
+       }
   }
 
   public emptySearchName = () => {
@@ -274,6 +336,11 @@ class TagList extends React.Component<any, IState> {
                   <Button type="primary" onClick={this.handleSearch}>
                     查询
                   </Button>
+                </FormItem>
+              </Col>
+              <Col span={8}>
+                <FormItem label="数据切片" className="mb-0">
+                   <Tag color="blue">{this.state.num}</Tag>
                 </FormItem>
               </Col>
             </Row>

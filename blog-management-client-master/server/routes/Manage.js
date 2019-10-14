@@ -401,4 +401,11 @@ router.put('/updateArticle', (req,res) => {
     })
  })
 /***文章管理 end */
+
+router.get('/getRandNum', (req, res) => {
+    let num = Math.random().toFixed(2)*1000+600;
+    let result = {};
+    result.num = num;
+    responseClient(res, 200, 0, result);
+})
 module.exports = router;
