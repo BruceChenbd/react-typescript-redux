@@ -21,8 +21,9 @@ const port = config.apiPort;
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(bodyParser.urlencoded({extend: false}));
-
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+ 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -33,13 +34,14 @@ app.use(session({
   saveUninitialized:true,
   cookie: {maxAge: 60 * 1000 * 30}//过期时间
 }))
+
 app.use(express.static(path.join(__dirname, './public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/main', mainRouter);
-app.use('/personal', personalRouter);
-app.use('/manage',manageRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/main', mainRouter);
+app.use('/api/personal', personalRouter);
+app.use('/api/manage',manageRouter);
 
 
 // 数据库连接

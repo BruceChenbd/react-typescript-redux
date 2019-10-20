@@ -90,6 +90,7 @@ class TagList extends React.Component<any, IState> {
   }
   
   public initNum = () => {
+    console.log(11)
     // 定义原始数据
     let originData:any = [],showData:any;
     // 初始化调用数据

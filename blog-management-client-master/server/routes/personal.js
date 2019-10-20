@@ -16,7 +16,7 @@ router.post('/upload', (req,res) => {
     //设置编码格式
     form.encoding = 'utf-8';
     //设置上传目录
-    form.uploadDir = '../public' + AVATAR_UPLOAD_FOLDER;
+    form.uploadDir = './public' + AVATAR_UPLOAD_FOLDER;
     //保留后缀
     form.keepExtensions = true;
     //文件大小

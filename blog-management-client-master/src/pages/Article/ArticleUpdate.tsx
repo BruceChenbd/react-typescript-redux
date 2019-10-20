@@ -98,11 +98,14 @@ class ArticleCreation extends React.Component<IProps, IState> {
   public render() {
     return (
       <Card className="blog-update-component">
-        <ArticleFormEdi
+        {
+          Object.keys(this.state.articleInfo).length == 0? null: <ArticleFormEdi
           articleInfo={this.state.articleInfo}
           postArticle={(values:any) => this.updateArticle(values)}
           goBack={this.goBack}
         />
+        }
+        
       </Card>
     );
   }

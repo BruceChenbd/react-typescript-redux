@@ -1,9 +1,13 @@
 import * as React from 'react';
-const  E  = require('wangeditor');
+// const  E  = require('wangeditor');
 import { Form, Select, Button, Input, message, Icon, Upload, Modal } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import 'simplemde/dist/simplemde.min.css';
 import './ArticleForm.less';
+import 'braft-editor/dist/index.css'
+import BraftEditor from 'braft-editor';
+
+
 
 import * as api from '../../api/fetchdata';
 import { checkUserToken } from '../../utils/utils';
@@ -24,84 +28,52 @@ interface IState {
   tagList: any[];
   previewVisible: boolean;
   previewImage: string;
-  editorContent: string;
-  isCreate:boolean
+  // editorContent: string;
+  isCreate:boolean,
+  editorState: any,
+  outputHTML: string
 }
 
 class ArticleFormEdit extends React.Component<IProps & FormComponentProps, IState> {
   public unMount: boolean = false;
-
+  public isLivinig: boolean = true;
   readonly state = {
     categoryList: [],
     tagList: [],
     previewVisible: false,
     previewImage: '',
-    editorContent:'',
-    isCreate:false
+    // editorContent:'',
+    isCreate:false,
+    editorState: '', // 设置编辑器初始内容
+    outputHTML: '<p></p>'
   };
 
   public componentDidMount() {
-    const elemMenu = this.refs.editorElemMenu;
-    const elemBody = this.refs.editorElemBody;
-    const editor = new E(elemMenu,elemBody)
-    // 使用 onchange 函数监听内容的变化，并实时更新到 state 中
-    editor.customConfig.onchange = (html:string) => {
-        this.setState({
-            // editorContent: editor.txt.text()
-            editorContent: editor.txt.html()
-        })
-    }
-    editor.customConfig.menus = [
-        'head',  // 标题
-        'bold',  // 粗体
-        'fontSize',  // 字号
-        'fontName',  // 字体
-        'italic',  // 斜体
-        'underline',  // 下划线
-        'strikeThrough',  // 删除线
-        'foreColor',  // 文字颜色
-        'backColor',  // 背景颜色
-        'link',  // 插入链接
-        'list',  // 列表
-        'justify',  // 对齐方式
-        'quote',  // 引用
-        'emoticon',  // 表情
-        'image',  // 插入图片
-        'table',  // 表格
-        'video',  // 插入视频
-        'code',  // 插入代码
-        'undo',  // 撤销
-        'redo'  // 重复
-    ]
-    editor.customConfig.uploadImgShowBase64 = true
-    editor.create()
-    this.setState({
-      isCreate:true
-    })
+    this.isLivinig = true;
+    //  // 异步设置编辑器内容
+    //  setTimeout(() => {
+    //   this.props.form.setFieldsValue({
+    //     content: BraftEditor.createEditorState('<p>Hello <b>World!</b></p>')
+    //   })
+    // }, 1000)
     this.getCategoryList();
     this.getTagList();
   }
 
   public componentWillUnmount() {
     this.unMount = true;
+    this.isLivinig = false;
   }
+
   componentWillReceiveProps(nextProps: any) {
-    // const elemMenu = this.refs.editorElemMenu;
-    // const elemBody = this.refs.editorElemBody;
-    // const editor = new E(elemMenu,elemBody);
-    // editor.create();
-    // console.log(editor.txt)
-    // if(nextProps.articleInfo && this.state.isCreate) {
-    //    this.setState({
-    //      editorContent: nextProps.articleInfo.content
-    //    })
-    //   editor.txt.html(nextProps.articleInfo.content)
-    // }
+
   }
+
   public handleSubmit = (e: any) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err: any, values: any) => {
       if (!err) {
+        values.content = values.content.toHTML();
         this.props.postArticle && this.props.postArticle(values);
       }
     });
@@ -212,15 +184,20 @@ class ArticleFormEdit extends React.Component<IProps & FormComponentProps, IStat
   public render() {
     const { previewVisible, previewImage } = this.state;
     const articleInfo = this.props.articleInfo || {};
-
+    
     const { getFieldDecorator, getFieldValue } = this.props.form;
-
     const uploadButton = (
       <div>
         <Icon type="plus" />
         <div className="ant-upload-text">Upload</div>
       </div>
     );
+    let initEditor;
+    if(Object.keys(articleInfo).length == 0) {
+        initEditor = '';
+    } else {
+      initEditor = BraftEditor.createEditorState(`${articleInfo.content}`)
+    }
 
     return (
       <div className="article-form-edit-component">
@@ -323,33 +300,25 @@ class ArticleFormEdit extends React.Component<IProps & FormComponentProps, IStat
             })(<TextArea rows={3} placeholder="请输入简介" />)}
           </FormItem>
           <FormItem className="full" label="正文">
-            {getFieldDecorator('content', {
-              initialValue: this.state.editorContent,
-              rules: [
-                {
-                  required: true,
-                  message: '请输入正文'
+          {getFieldDecorator('content', {
+              validateTrigger: 'onSbmit',
+              initialValue: initEditor,
+              rules: [{
+                required: true,
+                validator: (_, value, callback) => {
+                  if (value.isEmpty()) {
+                    callback('请输入正文内容')
+                  } else {
+                    callback()
+                  }
                 }
-              ]
+              }],
             })(
-              <div className="text-area" >
-                  <div ref="editorElemMenu"
-                      style={{backgroundColor:'#f1f1f1',border:"1px solid #ccc"}}
-                      className="editorElem-menu">
-
-                  </div>
-                  <div
-                      style={{
-                          padding:"0 10px",
-                          overflowY:"scroll",
-                          height:300,
-                          border:"1px solid #ccc",
-                          borderTop:"none"
-                      }}
-                      ref="editorElemBody" className="editorElem-body">
-
-                  </div>
-              </div>
+              <BraftEditor
+                className="my-editor"
+                placeholder="请输入正文内容"
+                
+              />
             )}
           </FormItem>
           <FormItem className="mb-0">

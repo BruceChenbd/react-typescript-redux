@@ -251,7 +251,7 @@ interface IState {
         },
         hoverAnimation: false,//注释 鼠标移动不可改变
         data: [{
-            value: 6000,
+            value: 8888,
             name: '',
             label: {
                 normal: {
@@ -263,7 +263,7 @@ interface IState {
             },
             tooltip: {
                 trigger: 'item',
-                formatter: "视频总量 : {c}"
+                formatter: "粉丝总量 : {c}"
             }
         }, {
             value: 3000,

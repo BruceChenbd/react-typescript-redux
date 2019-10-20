@@ -5,6 +5,7 @@ module.exports = {
     apiPort:process.env.APIPORT || '6000',
     dbHost:"localhost",
     dbPort:"27017",
+    // dbPort: "28001",
     app:{
         title:"personal blog",
         description:'bgg-sys',

@@ -202,7 +202,7 @@ router.post('/upload', (req,res) => {
     //设置编码格式
     form.encoding = 'utf-8';
     //设置上传目录
-    form.uploadDir = '../public' + COVER_UPLOAD_FOLDER;
+    form.uploadDir = './public' + COVER_UPLOAD_FOLDER;
     //保留后缀
     form.keepExtensions = true;
     //文件大小
@@ -376,7 +376,7 @@ router.delete('/deleteArticle/:id', (req,res) => {
 })
 
 // 修改文章
-router.put('/updateArticle', (req,res) => {
+router.post('/updateArticle', (req,res) => {
     let { id, category_id, content, cover_image, desc, tag_ids, title } = req.body;
     const now = new Date(); 
     var timeStr = getDateStr(now.getTime()/1000);
