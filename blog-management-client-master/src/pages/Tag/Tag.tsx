@@ -129,7 +129,7 @@ class TagList extends React.Component<any, IState> {
         }
 
       })
-    },5000)
+    },10000)
   }
   // 页面渲染num
   public renderNum = (message:any) => {

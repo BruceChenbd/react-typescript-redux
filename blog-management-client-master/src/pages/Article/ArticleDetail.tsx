@@ -3,7 +3,8 @@ import * as React from 'react';
 import { Card, Button, Tag } from 'antd';
 import { withRouter, RouteComponentProps, match } from 'react-router-dom';
 // import CodeBlock from '../../components/CodeBlock/CodeBlock';
-
+// import Lottie from 'react-lottie';
+// import * as animationData from '../../assets/10456-kissing-emoji.json';
 import * as api from '../../api/fetchdata';
 
 import './ArticleDetail.less';
@@ -101,6 +102,14 @@ class ArticleDetail extends React.Component<IProps, IState> {
 
   public render() {
     const {  articleInfo: info } = this.state;
+    // const defaultOptions = {
+    //   loop: true,
+    //   autoplay: true, 
+    //   animationData: animationData,
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid slice'
+    //   }
+    // };
     return (
       <Card className="blog-detail-component">
         <div className="ant-row ant-form-item">
@@ -129,7 +138,11 @@ class ArticleDetail extends React.Component<IProps, IState> {
          </div>
         </div>
         <div className="ant-row ant-form-item">
-
+        {/* <Lottie options={defaultOptions}
+              height={400}
+              width={400}
+              isStopped={this.state.isStopped}
+              isPaused={this.state.isPaused}/> */}
         </div>
        
         <Button  onClick={this.goBack}>

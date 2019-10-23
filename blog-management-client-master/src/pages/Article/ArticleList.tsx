@@ -162,8 +162,8 @@ class UserList extends React.Component<IProps, IState> {
     e.preventDefault();
     this.props.form.validateFields((err: any, values: any) => {
       const { created_at, updated_at, title, category_id, tag_id } = values;
-      let createdStartAt = created_at[0] ? dateFmt('YYYY-MM-DD 00:00:00', created_at[0]._d) : '';
-      let updatedStartAt = updated_at[0] ? dateFmt('YYYY-MM-DD 00:00:00', updated_at[0]._d) : '';
+      let createdStartAt = created_at[0] ? dateFmt('YYYY-MM-DD', created_at[0]._d) : '';
+      let updatedStartAt = updated_at[0] ? dateFmt('YYYY-MM-DD', updated_at[0]._d) : '';
 
       this.queryOpt = {
         ...this.queryOpt,

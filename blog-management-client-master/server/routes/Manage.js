@@ -298,6 +298,8 @@ router.post('/addArticle', (req, res) => {
         tag_ids,
         title,
         createTime:timeStr,
+        createTimeD:timeStr.split(' ')[0],
+        updateTimeD:timeStr.split(' ')[0],
         updateTime:timeStr
     })
     model.save().then(data => {
@@ -315,10 +317,10 @@ router.get('/getArticleList', (req,res) => {
         searchConditions.title = title;
     }
     if(created_start_at) {
-        searchConditions.createTime = created_start_at;
+        searchConditions.createTimeD = created_start_at;
     }
     if(updated_start_at) {
-        searchConditions.updated_start_at = updated_start_at;
+        searchConditions.updateTimeD = updated_start_at;
     }
     if(category_id) {
         searchConditions.category_id = category_id;
@@ -348,6 +350,7 @@ router.get('/getArticleList', (req,res) => {
             }) 
         }) 
     } else {
+        searchConditions.userId = userId;
         articleSchema.countDocuments(searchConditions).then(count => {
             data.total = count;
             articleSchema.find(searchConditions).skip(skip).limit(5).then(d => {
@@ -381,7 +384,7 @@ router.post('/updateArticle', (req,res) => {
     const now = new Date(); 
     var timeStr = getDateStr(now.getTime()/1000);
     articleSchema.findOne({_id:id}).then(data => {
-        articleSchema.update({_id:id}, {category_id, content, cover_image, desc, tag_ids, title,updateTime:timeStr}).then(u => {
+        articleSchema.update({_id:id}, {category_id, content, cover_image, desc, tag_ids, title,updateTime:timeStr.split(' ')[0]}).then(u => {
             responseClient(res,200,0,'更新成功!')
         }).catch(err => {
             responseClient(res)

@@ -399,7 +399,7 @@ handleExportAll = (e:any) => {
 
   const json = nowdata.map((item) => {
     return Object.keys(item).reduce((newData, key) => {
-      const newKey = entozh[key] || key
+      const newKey = entozh[key]
       newData[newKey] = item[key]
       return newData
     }, {})
@@ -424,7 +424,7 @@ handleExportDocument = (e:any) => {
 
   const json = nowdata.map((item) => {
     return Object.keys(item).reduce((newData, key) => {
-      const newKey = entozh[key] || key
+      const newKey = entozh[key]
       newData[newKey] = item[key]
       return newData
     }, {})
@@ -433,7 +433,7 @@ handleExportDocument = (e:any) => {
 
   const sheet = XLSX.utils.json_to_sheet(json);
 
-  this.openDownloadDialog(this.sheet2blob(sheet,undefined), `标准格式文件.xlsx`);
+  this.openDownloadDialog(this.sheet2blob(sheet,undefined), `分类名称表.xlsx`);
 
 }
   public render() {
@@ -508,7 +508,7 @@ handleExportDocument = (e:any) => {
                 </FormItem>
               </Col>
               <Col span={4}>
-                <FormItem className="mb-0">
+                <FormItem className="mb-0" style={{display:'none'}}>
                 <Upload {...uploadProps}>
                   <Button type="primary">
                     excl导入

@@ -15,6 +15,8 @@ import  'echarts/lib/chart/pie';
 // 引入提示框和标题组件
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/title';
+import Lottie from 'react-lottie';
+import * as animationData from '../../assets/10456-kissing-emoji.json';
 
 
 import './Home.less';
@@ -321,6 +323,14 @@ interface IState {
 
   public render() {
     const { isLoading, dashData, userName } = this.state;
+    const defaultOptions = {
+      loop: true,
+      autoplay: true, 
+      animationData: animationData,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+      }
+    };
     return (
       <div className="home-page">
         <Row gutter={16}>
@@ -381,8 +391,20 @@ interface IState {
         </Row>
         <Row style={{margin: '20px 0'}}>
           <Card>
-            <h4>在线信息</h4>
-            <div style={{padding:'20px 30px',boxSizing:'border-box',textAlign:'center'}}>Hello! {userName},欢迎您登陆博客管理系统，您已在线<span style={{fontWeight:'bold',color:'red'}}> {this.state.hour}</span>时 <span  style={{fontWeight:'bold',color:'red'}}> {this.state.minute}</span>分 <span  style={{fontWeight:'bold',color:'red'}}> {this.state.second}</span>秒</div>
+            {
+             this.state.userName == '小玉玉'? <h4>寄语</h4>:<h4>在线信息</h4>
+            }
+            {
+              this.state.userName == '小玉玉'? 
+              <div className="yuyu" style={{padding:'20px 30px',boxSizing:'border-box',textAlign:'center',fontSize:30,color:'orange'}}>
+               <Lottie options={defaultOptions}
+              height={50}
+              width={100}
+              />
+              亲爱的玉玉，今天也要元气满满哦，<span style={{color:'red'}}>love you!</span>
+              </div>:
+              <div style={{padding:'20px 30px',boxSizing:'border-box',textAlign:'center'}}>Hello! {userName},欢迎您登陆博客管理系统，您已在线<span style={{fontWeight:'bold',color:'red'}}> {this.state.hour}</span>时 <span  style={{fontWeight:'bold',color:'red'}}> {this.state.minute}</span>分 <span  style={{fontWeight:'bold',color:'red'}}> {this.state.second}</span>秒</div>
+            }
           </Card>
         </Row>
       </div>

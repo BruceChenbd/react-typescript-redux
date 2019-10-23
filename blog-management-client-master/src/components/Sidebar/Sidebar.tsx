@@ -7,6 +7,8 @@ import { IStoreState } from '../../types';
 import * as actions from '../../actions';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import * as animationData from '../../assets/8307-love-icon-animation.json';
+import Lottie from 'react-lottie';
 
 import './Sidebar.less';
 
@@ -20,10 +22,19 @@ interface IProps extends RouteComponentProps {
 }
 
 class Sidebar extends React.Component<IProps, any> {
-  public componentDidMount() {
-    this.setSidebarStatus();
+  readonly state = {
+    userName:''
   }
-
+  public componentDidMount() {
+    let userInfoStr: string | null = localStorage.getItem('USER_INFO');
+    if (userInfoStr) {
+      let userInfo: any = JSON.parse(userInfoStr);
+      this.setState({
+        userName: userInfo.username,
+      })
+      this.setSidebarStatus();
+    }
+  }
   // set active status of sidebar
   public setSidebarStatus = () => {
     sidebarMenus.forEach(item => {
@@ -39,10 +50,23 @@ class Sidebar extends React.Component<IProps, any> {
 
   public render() {
     const { collapsed, selectedKeys, location } = this.props;
+    const defaultOptions = {
+      loop: true,
+      autoplay: true, 
+      animationData: animationData,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+      }
+    };
+
     return (
       <Sider className="sidebar-component" trigger={null} collapsible collapsed={collapsed}>
         <Scrollbars>
-          <div className="logo"><img src={require('../../assets/images/xigua1.png')}></img></div>
+          <div className="logo">
+            {this.state.userName == '小玉玉'?<Lottie options={defaultOptions}
+              height={'100%'}
+              width={'100%'} />:<img src={require('../../assets/images/xigua1.png')}></img>}
+          </div>
           <Menu theme="dark" mode="inline" selectedKeys={selectedKeys} onSelect={this.handleSelect}>
             {sidebarMenus.map(item => {
               return (

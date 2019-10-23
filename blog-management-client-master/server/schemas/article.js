@@ -13,5 +13,7 @@ module.exports = new mongoose.Schema({
     tag_ids: Array,
     title: String,
     createTime: String,
-    updateTime: String
+    createTimeD: String,
+    updateTime: String,
+    updateTimeD: String
 })
