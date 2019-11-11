@@ -438,6 +438,7 @@ handleExportDocument = (e:any) => {
 }
   public render() {
     const { queryOpt, mode,total ,columns,data,fileList} = this.state;
+    
     // 分页配置
     const paginationProps = {
       showTotal: () => `共${total}条`,
@@ -519,7 +520,6 @@ handleExportDocument = (e:any) => {
             </Row>
           </Form>
         </Card>
-
         <Card className="search-result">
           <Button type="dashed" size="small" onClick={() => this.showModel('add')} style={{ marginBottom: 20 }}>
             添加分类

@@ -5,6 +5,9 @@ import { Card, Form, Row, Col, Input, Button, Table, Divider, message, Modal, Ta
 import { ColumnProps } from 'antd/lib/table';
 import './Tag.less';
 import {CategoryCreateM} from '../../components/TagModel/TagModel';
+import Item from '../../components/countUp/countUp'
+// import FlipCom from '../../components/pageAnimate/pageAnimate'
+
 
 const FormItem = Form.Item;
 const confirm = Modal.confirm;
@@ -90,7 +93,6 @@ class TagList extends React.Component<any, IState> {
   }
   
   public initNum = () => {
-    console.log(11)
     // 定义原始数据
     let originData:any = [],showData:any;
     // 初始化调用数据
@@ -129,7 +131,7 @@ class TagList extends React.Component<any, IState> {
         }
 
       })
-    },10000)
+    },5000)
   }
   // 页面渲染num
   public renderNum = (message:any) => {
@@ -317,9 +319,24 @@ class TagList extends React.Component<any, IState> {
   };
 
   public render() {
+    // countUp动画
 
+    let amiateCount = {
+      name: '金额',
+      value: this.state.num,
+      unit: '亿',
+      digits: 2,
+      nameWidth: '45%',
+      valueWidth: '45%',
+      unitWidth: '10%'
+    }
+    // let activity = {
+    //   value: this.state.num,
+    //   digitsNumber: 8
+    // }
     return (
       <div className="tag-list-component">
+        {/* <FlipCom {...activity} /> */}
         <Card className="search-form">
           <Form>
             <Row gutter={24}>
@@ -377,6 +394,8 @@ class TagList extends React.Component<any, IState> {
           onCancel={this.hideModel}
           onSave={this.handleSave}
         />
+        <Item animate {...amiateCount} />
+
       </div>
     );
   }
