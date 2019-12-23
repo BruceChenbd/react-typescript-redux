@@ -86,7 +86,7 @@ class CategoryList extends React.Component<any, IState> {
   
   
   public componentWillMount() {
-    this.getCategoryList();
+    this.getCategoryList({isArticle: false});
   }
 
   public componentWillUnmount() {
@@ -100,12 +100,14 @@ class CategoryList extends React.Component<any, IState> {
       opt = {
         pageSize,
         pageNum:current,
-        name:categoryName
+        name:categoryName,
+        isArticle: false
       }
      } else {
       opt = {
         pageSize,
         pageNum:current,
+        isArticle: false
       }
      } 
      this.getCategoryList(opt);
@@ -121,12 +123,14 @@ class CategoryList extends React.Component<any, IState> {
       opt = {
         pageSize,
         pageNum:current,
-        name:categoryName
+        name:categoryName,
+        isArticle: false
       }
      } else {
       opt = {
         pageSize,
         pageNum:current,
+        isArticle: false
       }
      } 
      this.getCategoryList(opt);
@@ -148,6 +152,7 @@ class CategoryList extends React.Component<any, IState> {
       name: this.state.queryOpt.categoryName,
       pageSize:5,
       pageNum:this.state.pageNum,
+      isArticle: false
     };
     this.getCategoryList(opt);
   };
@@ -168,7 +173,7 @@ class CategoryList extends React.Component<any, IState> {
           message.success(res.data.message);
 
           if (this.unMount) return;
-          this.getCategoryList({pageNum:this.state.pageNum,pageSize:5});
+          this.getCategoryList({pageNum:this.state.pageNum,pageSize:5,isArticle: false});
         }
       })
       .catch(err => console.log(err));
@@ -238,7 +243,7 @@ class CategoryList extends React.Component<any, IState> {
             this.setState({ isVisibleModel: false });
             form.resetFields();
 
-            this.getCategoryList();
+            this.getCategoryList({isArticle: false});
           }
         })
         .catch(err => console.log(err));
@@ -271,7 +276,7 @@ class CategoryList extends React.Component<any, IState> {
             this.setState({ isVisibleModel: false });
             form.resetFields();
 
-            this.getCategoryList({pageNum:this.state.pageNum,pageSize:5});
+            this.getCategoryList({pageNum:this.state.pageNum,pageSize:5,isArticle: false});
           }
         })
         .catch(err => console.log(err));

@@ -1,4 +1,27 @@
 .tag-list-component {
+  .warn-btn {
+    display: flex;
+    list-style: none;
+    width: 80%;
+    margin: 10px auto;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid blueviolet;
+    .active {
+      background: purple;
+      color: white;
+    }
+    li {
+      flex:1;
+      text-align: center;
+      padding: 5px;
+      cursor: pointer;
+      &:hover {
+        background: purple;
+        color: white;
+      }
+    }
+  }
   .search-form {
     padding: 0;
   }

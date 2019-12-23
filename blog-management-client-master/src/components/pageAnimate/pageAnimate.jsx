@@ -1,10 +1,10 @@
 import * as React from 'react'
-import 'flipclock/dist/flipclock.js'
+
+import FlipClock from 'flipclock/dist/flipclock'
 import 'flipclock/dist/flipclock.css'
-// import FlipClock from 'flipclock'
-const FlipClock = require('flipclock')
-import './pageAnimate.less'
-import _ from 'loadsh'
+
+// import './pageAnimate.less'
+import _ from 'lodash'
 const  $ = require('jquery') 
 
 
@@ -30,25 +30,24 @@ class FlipCom extends React.Component<any, any> {
     let temp = 1;
     // 计算事件间隔
     let realInterval = _.ceil( 3000 / distance );
+
     let timer = setInterval(() => {
         if(temp > distance) {
             clearInterval(timer);
             return;
         }
-        flips[index].setValue((oValue + temp) % 10);
-        temp ++;
+        flips[index].setValue((oValue + temp) % 10)
+        temp ++
     }, realInterval)
   }
 
   createFlips () {
-      let outerDiv = this.refs.flip;
-    //   console.log(new FlipClock(outerDiv),'000')
+      let outerDiv = document.querySelector('#flip');
 
       let { digitsNumber, seperateNumber, seperator, value } = this.props;
       digitsNumber = digitsNumber || 6;
       seperateNumber = seperateNumber || 3;
       let startSeperatorIndex = digitsNumber % seperateNumber;
-
       startSeperatorIndex === 0? startSeperatorIndex = seperateNumber : startSeperatorIndex = startSeperatorIndex;
       let flipDivs = $(outerDiv).children().filter((index) => {
           if(index % (seperateNumber+1) === startSeperatorIndex) {
@@ -57,12 +56,8 @@ class FlipCom extends React.Component<any, any> {
           return true;
       });
       _.each(flipDivs, (flipDiv) => {
-            //   let flip = new FlipClock($(flipDiv), 0, {
-            //     clockTace: 'Counter'
-            //   })
-            //   console.log(flip,'flip')
-          let flip = $(flipDiv).FlipClock(0, {
-              clockTace: 'Counter'
+          let flip = new FlipClock(flipDiv, 0 , {
+            clockFace: 'Counter'
           });
           $(flipDiv).find('ul:nth-child(1)').remove();
           this.state.flips.push(flip);
@@ -70,7 +65,6 @@ class FlipCom extends React.Component<any, any> {
   }
 
   componentDidMount() {
-      console.log(_)
       this.createFlips();
   }
 
@@ -82,16 +76,16 @@ class FlipCom extends React.Component<any, any> {
   }
 
   componentWillUpdate(nextProps,nextState) {
-      let preValue = this.props.value,
-      nextValue = nextProps.value,
-      digitsNumber = nextProps.digitsNumber;
-      digitsNumber = digitsNumber || 6;
-      preValue = preValue || 0;
-      nextValue = nextValue || 0;
+    let preValue = this.props.value,
+    nextValue = nextProps.value,
+    digitsNumber = nextProps.digitsNumber;
+    digitsNumber = digitsNumber || 6;
+    preValue = preValue || 0;
+    nextValue = nextValue || 0;
 
-      let strPreValue = `${preValue}`,
-      strPreValueLen = strPreValue.length,
-      zeroPreNeedLen = digitsNumber - strPreValueLen;
+    let strPreValue = `${preValue}`,
+    strPreValueLen = strPreValue.length,
+    zeroPreNeedLen = digitsNumber - strPreValueLen;
 
     //   位数不足前面补0
     let zeroPreNeed = `0`.repeat(zeroPreNeedLen),
@@ -104,7 +98,6 @@ class FlipCom extends React.Component<any, any> {
     // 位数不足，前面补0
     let zeroNextNeed = `0`.repeat(zeroNextNeedLen),
     strTargetValue = `${zeroNextNeed}${strNextValue}`;
-
     // 给每一位赋值
     _.each(strTargetValue, (value, index) => {
         this.state.flips[index] && this.rAFFlip(index, strOriginValue[index], value);
@@ -112,6 +105,8 @@ class FlipCom extends React.Component<any, any> {
   }
   
   render() {
+    console.log(this.props)
+
     let { digitsNumber, seperateNumber, seperator, value } = this.props;
 
     digitsNumber = digitsNumber || 6;
@@ -132,7 +127,7 @@ class FlipCom extends React.Component<any, any> {
         }
     }
     return (
-      <div className="outer" ref='flip'>
+      <div className="outer" id='flip'>
          {innerJsx}
       </div>
     );

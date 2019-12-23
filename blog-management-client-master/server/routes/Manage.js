@@ -35,32 +35,47 @@ router.post('/addCategory', (req,res) => {
 
 // 查询分类
 router.get('/getCategories', (req,res) => {
-    let { name, pageNum, pageSize } = req.query;
+    let { name, pageNum, pageSize, isArticle } = req.query;
     let skip = ( pageNum - 1) < 0 ? 0 : (pageNum - 1) * 5;
     let tokenAndUserId = req.headers['x-auth-token']; // 从Authorization中获取token
     let token = tokenAndUserId.split('&&')[1];
     let userId = tokenAndUserId.split('&&')[0];
     // 查询条件 name 不为空
-    if(name != undefined && name != '') {
-        let data = {};
-        // 查询总数
-        classifySchema.countDocuments({categoryName:name,userId}).then(count => {
-            data.total = count;
-            classifySchema.find({categoryName:name,userId}).skip(skip).limit(5).then(d => {
-                if(JSON.stringify(d) == '[]') {
-                    data.categoryArr = [];
-                    responseClient(res,200,0,'暂无数据',data)
-                } else {
-                    data.categoryArr = d;
-                    responseClient(res,200,0,'查询成功',data)
-                }
+    if(isArticle != undefined) {
+        if(name != undefined && name != '') {
+            let data = {};
+            // 查询总数
+            classifySchema.countDocuments({categoryName:name,userId}).then(count => {
+                data.total = count;
+                classifySchema.find({categoryName:name,userId}).skip(skip).limit(5).then(d => {
+                    if(JSON.stringify(d) == '[]') {
+                        data.categoryArr = [];
+                        responseClient(res,200,0,'暂无数据',data)
+                    } else {
+                        data.categoryArr = d;
+                        responseClient(res,200,0,'查询成功',data)
+                    }
+                }) 
             }) 
-        }) 
+        } else {
+            let data = {};
+            classifySchema.countDocuments({userId}).then(count => {
+                data.total = count;
+                classifySchema.find({userId}).skip(skip).limit(5).then(t => {
+                        data.categoryArr = t
+                        responseClient(res,200,0,'查询成功',data)
+                }).catch(err => {
+                    responseClient(res)
+                })
+            }).catch(err => {
+                responseClient(res)
+            }) 
+        }
     } else {
         let data = {};
         classifySchema.countDocuments({userId}).then(count => {
             data.total = count;
-            classifySchema.find({userId}).skip(skip).limit(5).then(t => {
+            classifySchema.find({userId}).then(t => {
                     data.categoryArr = t
                     responseClient(res,200,0,'查询成功',data)
             }).catch(err => {
@@ -126,32 +141,47 @@ router.post('/addTag', (req,res) => {
 
 // 查询分类
 router.get('/getTag', (req,res) => {
-    let { tagName, pageNum, pageSize } = req.query;
+    let { tagName, pageNum, pageSize, isArticle } = req.query;
     let skip = ( pageNum - 1) < 0 ? 0 : (pageNum - 1) * 5;
     let tokenAndUserId = req.headers['x-auth-token']; // 从Authorization中获取token
     let token = tokenAndUserId.split('&&')[1];
     let userId = tokenAndUserId.split('&&')[0];
     // 查询条件 name 不为空
-    if(tagName != undefined && tagName != '') {
-        let data = {};
-        // 查询总数
-        tagSchema.countDocuments({tagName,userId}).then(count => {
-            data.total = count;
-            tagSchema.find({tagName,userId}).skip(skip).limit(5).then(d => {
-                if(JSON.stringify(d) == '[]') {
-                    data.tagArr = [];
-                    responseClient(res,200,0,'暂无数据',data)
-                } else {
-                    data.tagArr = d;
-                    responseClient(res,200,0,'查询成功',data)
-                }
+    if(isArticle != undefined) {
+        if(tagName != undefined && tagName != '') {
+            let data = {};
+            // 查询总数
+            tagSchema.countDocuments({tagName,userId}).then(count => {
+                data.total = count;
+                tagSchema.find({tagName,userId}).skip(skip).limit(5).then(d => {
+                    if(JSON.stringify(d) == '[]') {
+                        data.tagArr = [];
+                        responseClient(res,200,0,'暂无数据',data)
+                    } else {
+                        data.tagArr = d;
+                        responseClient(res,200,0,'查询成功',data)
+                    }
+                }) 
             }) 
-        }) 
+        } else {
+            let data = {};
+            tagSchema.countDocuments({userId}).then(count => {
+                data.total = count;
+                tagSchema.find({userId}).skip(skip).limit(5).then(t => {
+                        data.tagArr = t
+                        responseClient(res,200,0,'查询成功',data)
+                }).catch(err => {
+                    responseClient(res)
+                })
+            }).catch(err => {
+                responseClient(res)
+            }) 
+        }
     } else {
         let data = {};
         tagSchema.countDocuments({userId}).then(count => {
             data.total = count;
-            tagSchema.find({userId}).skip(skip).limit(5).then(t => {
+            tagSchema.find({userId}).then(t => {
                     data.tagArr = t
                     responseClient(res,200,0,'查询成功',data)
             }).catch(err => {
@@ -161,6 +191,7 @@ router.get('/getTag', (req,res) => {
             responseClient(res)
         }) 
     }
+   
 })
 
 // 修改分类

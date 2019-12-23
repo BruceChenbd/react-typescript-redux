@@ -6,7 +6,7 @@ import { ColumnProps } from 'antd/lib/table';
 import './Tag.less';
 import {CategoryCreateM} from '../../components/TagModel/TagModel';
 import Item from '../../components/countUp/countUp'
-// import FlipCom from '../../components/pageAnimate/pageAnimate'
+import AnimateTable from '../../components/table/table'
 
 
 const FormItem = Form.Item;
@@ -23,7 +23,9 @@ interface IState {
   total: number;
   pageNum: number;
   num: number,
-  n:number
+  n:number,
+  scrollData: any[],
+  activeClass: string
 }
 
 class TagList extends React.Component<any, IState> {
@@ -41,7 +43,17 @@ class TagList extends React.Component<any, IState> {
     total: 0,
     pageNum: 0,
     num: 0,
-    n:0
+    n:0,
+    scrollData: [
+      {name:'告警类型1-first'},
+      {name:'告警类型1-second'},
+      {name:'告警类型1-third'},
+      {name:'告警类型1-fourth'},
+      {name:'告警类型1-fifth'},
+      {name:'告警类型1-sixth'},
+      {name:'告警类型1-seventh'},
+    ],
+    activeClass: 'first'
   };
 
   public columns: ColumnProps<any>[] = [
@@ -84,7 +96,10 @@ class TagList extends React.Component<any, IState> {
   };
 
   public componentDidMount() {
-    this.getTagList();
+    let opt = {
+      isArticle: false
+    }
+    this.getTagList(opt);
     this.initNum()
   }
 
@@ -105,7 +120,7 @@ class TagList extends React.Component<any, IState> {
     // 每秒刷新num
     setInterval(() => {
       this.renderNum(showData? showData: originData)
-    },1000)
+    },10000)
     
     // 5秒调用一次接口
     setInterval(() => {
@@ -159,7 +174,8 @@ class TagList extends React.Component<any, IState> {
     this.queryOpt = {
       ...this.queryOpt,
       tagName: this.state.searchName,
-      pageNum: this.state.pageNum
+      pageNum: this.state.pageNum,
+      isArticle: false
     };
 
     this.getTagList(this.queryOpt);
@@ -168,7 +184,8 @@ class TagList extends React.Component<any, IState> {
   public handlePageChange = (page: number) => {
     this.queryOpt = {
       ...this.queryOpt,
-      pageNum: page
+      pageNum: page,
+      isArticle: false
     };
 
     this.getTagList(this.queryOpt);
@@ -193,6 +210,7 @@ class TagList extends React.Component<any, IState> {
           let opt =  {
             ...this.queryOpt,
             pageNum:this.state.pageNum,
+            isArticle: false
           }
           this.getTagList(opt);
         }
@@ -257,7 +275,7 @@ class TagList extends React.Component<any, IState> {
             this.setState({ isVisibleModel: false });
             form.resetFields();
 
-            this.getTagList();
+            this.getTagList({isArticle: false});
           }
         })
         .catch(err => console.log(err));
@@ -286,7 +304,8 @@ class TagList extends React.Component<any, IState> {
             form.resetFields();
             let opt = {
               ...this.queryOpt,
-              pageNum:this.state.pageNum
+              pageNum:this.state.pageNum,
+              isArticle: false,
             }
             this.getTagList(opt);
           }
@@ -317,7 +336,52 @@ class TagList extends React.Component<any, IState> {
       })
       .catch(err => console.log(err));
   };
-
+  
+  public changeScroll = (e: any) => {
+    const data1 = [
+      {name:'告警类型1-first'},
+      {name:'告警类型1-second'},
+      {name:'告警类型1-third'},
+      {name:'告警类型1-fourth'},
+      {name:'告警类型1-fifth'},
+      {name:'告警类型1-sixth'},
+      {name:'告警类型1-seventh'},
+    ]
+    const data2 = [
+      {name:'告警类型2-first'},
+      {name:'告警类型2-second'},
+      {name:'告警类型2-third'},
+      {name:'告警类型2-fourth'},
+      {name:'告警类型2-fifth'},
+      {name:'告警类型2-sixth'},
+      {name:'告警类型2-seventh'},
+    ]
+    const data3 = [
+      {name:'告警类型3-first'},
+      {name:'告警类型3-second'},
+      {name:'告警类型3-third'},
+      {name:'告警类型3-fourth'},
+      {name:'告警类型3-fifth'},
+      {name:'告警类型3-sixth'},
+      {name:'告警类型3-seventh'},
+    ]
+     if (e.target.dataset.index == 1) {
+       this.setState({
+         scrollData: data1,
+         activeClass: 'first'
+       })
+     } else if (e.target.dataset.index == 2) {
+       this.setState({
+         scrollData: data2,
+         activeClass: 'second'
+       })
+     } else {
+        this.setState({
+          scrollData: data3,
+          activeClass: 'third'
+        })
+     }
+  }
   public render() {
     // countUp动画
 
@@ -330,13 +394,10 @@ class TagList extends React.Component<any, IState> {
       valueWidth: '45%',
       unitWidth: '10%'
     }
-    // let activity = {
-    //   value: this.state.num,
-    //   digitsNumber: 8
-    // }
+
+    
     return (
       <div className="tag-list-component">
-        {/* <FlipCom {...activity} /> */}
         <Card className="search-form">
           <Form>
             <Row gutter={24}>
@@ -395,7 +456,12 @@ class TagList extends React.Component<any, IState> {
           onSave={this.handleSave}
         />
         <Item animate {...amiateCount} />
-
+        <ul className="warn-btn">
+          <li className={this.state.activeClass == 'first'? 'active':''} onClick={this.changeScroll} data-index="1">告警类型1</li>
+          <li className={this.state.activeClass == 'second'? 'active':''} onClick={this.changeScroll} data-index="2">告警类型2</li>
+          <li className={this.state.activeClass == 'third'? 'active':''} onClick={this.changeScroll} data-index="3">告警类型3</li>
+        </ul>
+        <AnimateTable data={this.state.scrollData}/>
       </div>
     );
   }

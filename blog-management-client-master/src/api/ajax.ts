@@ -3,7 +3,6 @@ import { message } from 'antd';
 import baseUrl from '../config/url.config';
 
 let ajax: AxiosInstance = axios.create({
-  timeout: 30000,
   baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json; charset=UTF-8',
