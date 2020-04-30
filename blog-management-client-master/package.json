@@ -47,7 +47,7 @@
     "highlight.js": "^9.15.6",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jsonwebtoken": "^8.5.1",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
