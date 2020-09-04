@@ -53,7 +53,7 @@
     "less-loader": "^5.0.0",
     "loadsh": "^0.0.4",
     "lodash-es": "^4.17.15",
-    "marked": "^0.6.1",
+    "marked": "^0.7.0",
     "mongoose": "^5.6.7",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
