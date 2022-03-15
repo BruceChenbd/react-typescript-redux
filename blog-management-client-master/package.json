@@ -52,7 +52,7 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "loadsh": "^0.0.4",
-    "lodash-es": "^4.17.15",
+    "lodash-es": "^4.17.21",
     "marked": "^0.6.1",
     "mongoose": "^5.6.7",
     "object-assign": "4.1.1",
